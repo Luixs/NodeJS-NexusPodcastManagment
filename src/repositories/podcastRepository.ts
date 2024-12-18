@@ -18,17 +18,54 @@ const findEpisodes = async (): Promise<IPodcast[]> => {
     const episodes = await pCollection.find({}).toArray();
 
     // ===== Mapping model
-    var episodesMap : IPodcast[] = [];
+    var episodesMap: IPodcast[] = [];
     if (episodes.length == 0 || episodes == null) return [];
 
-    
+
     episodes.forEach(d => {
         episodesMap.push({
             _id: d._id.toString(),
             episode: d.episode,
             guestName: d.guesName,
             podcastHost: d.podcastHost,
-            tags:d.tags,
+            tags: d.tags,
+            publicationDate: d.publicationDate || new Date()
+        })
+    })
+
+    return episodesMap;
+}
+
+const findEpisodesByFilter = async (filter: string): Promise<IPodcast[]> => {
+
+    // ===== db connect
+    let db = await connectToDatabase();
+    const pCollection: mongoDB.Collection = db.collection(process.env.MONGODB_COLLECTION_P_NAME!);
+
+    // ===== Fetch all episodes
+    const episodes = await pCollection.find({
+        podcastHost: {
+            $regex: `^${filter}$`, // Matches the whole word
+            $options: 'i'        // Case-insensitive flag
+        }
+    }).toArray();
+
+    // ===== Mapping model
+    var episodesMap: IPodcast[] = [];
+
+    console.log("here");
+    console.log(episodes);
+
+    if (episodes.length == 0 || episodes == null) return [];
+
+
+    episodes.forEach(d => {
+        episodesMap.push({
+            _id: d._id.toString(),
+            episode: d.episode,
+            guestName: d.guesName,
+            podcastHost: d.podcastHost,
+            tags: d.tags,
             publicationDate: d.publicationDate || new Date()
         })
     })
@@ -37,5 +74,6 @@ const findEpisodes = async (): Promise<IPodcast[]> => {
 }
 
 export default {
-    findEpisodes
+    findEpisodes,
+    findEpisodesByFilter
 }

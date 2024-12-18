@@ -5,6 +5,7 @@
 
 // ===== CONSTANTS =====
 import { podcastRep } from "../repositories";
+import { handleQueryString } from "../utils";
 
 const listAllEpisodes = async () => {
 
@@ -18,9 +19,13 @@ const listAllEpisodes = async () => {
     }
 };
 
-const filterEpisodes = async () => {
-    let db = await podcastRep.findEpisodes()
-    return db;
+const filterEpisodes = async (queryString: string) => {
+
+    // ===== handle query string
+    var filter = await handleQueryString(queryString);
+
+    let content = await podcastRep.findEpisodesByFilter(filter || "");
+    return content;
 }
 
 export default {
