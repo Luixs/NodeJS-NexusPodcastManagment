@@ -1,5 +1,5 @@
 export interface IPodcast {
-    id: string,
+    _id: string,
     episode: string,
     guestName: string,
     publicationDate: Date,

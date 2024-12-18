@@ -6,11 +6,16 @@
 // ===== CONSTANTS =====
 import { podcastRep } from "../repositories";
 
-
-
 const listAllEpisodes = async () => {
-    let db = await podcastRep.findEpisodes()
-    return db;
+
+    try {
+
+        let episodes = await podcastRep.findEpisodes()
+        return episodes;
+
+    } catch (error) {
+        return null;
+    }
 };
 
 const filterEpisodes = async () => {

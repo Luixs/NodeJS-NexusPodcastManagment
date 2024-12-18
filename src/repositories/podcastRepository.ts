@@ -4,23 +4,36 @@
 *****************************************************************************************/
 
 // ===== IMPORTS =====
+import * as mongoDB from 'mongodb';
 import { IPodcast } from '../interfaces';
-const DUMMY_DATA = {
-    message: "test with dummy"
-}
+import { connectToDatabase } from '../config/db';
 
 const findEpisodes = async (): Promise<IPodcast[]> => {
 
-    return [
-        {
-            episode: "01-Bla bla bla",
-            guestName: "Luis",
-            id: "12313",
-            podcastHost: "NexusTest",
-            publicationDate: new Date(),
-            tags: ["Test"]
-        }
-    ];
+    // ===== db connect
+    let db = await connectToDatabase();
+    const pCollection: mongoDB.Collection = db.collection(process.env.MONGODB_COLLECTION_P_NAME!);
+
+    // ===== Fetch all episodes
+    const episodes = await pCollection.find({}).toArray();
+
+    // ===== Mapping model
+    var episodesMap : IPodcast[] = [];
+    if (episodes.length == 0 || episodes == null) return [];
+
+    
+    episodes.forEach(d => {
+        episodesMap.push({
+            _id: d._id.toString(),
+            episode: d.episode,
+            guestName: d.guesName,
+            podcastHost: d.podcastHost,
+            tags:d.tags,
+            publicationDate: d.publicationDate || new Date()
+        })
+    })
+
+    return episodesMap;
 }
 
 export default {
