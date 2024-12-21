@@ -15,7 +15,7 @@ export async function handleRoutes(req: IncomingMessage, resp: ServerResponse) {
     const { method, url } = req;
 
     // ===== Separete queryString
-    const [currentUrl, query] = req.url?.split("?") ?? ["", ""];
+    const [currentUrl, query] = url?.split("?") ?? ["", ""];
 
     // ===== Creating the map
     const currentRouteKey = `${method} ${currentUrl}`;
