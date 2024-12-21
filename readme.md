@@ -74,7 +74,7 @@ This is a simple template yet robust **Node.js API** sample built entirely witho
 |   └── 📁 utils                    #Handler Functions
 |   └── 📁 config
 │       └───── db.ts                #Layer that creates the connection with the MongoDB
-│       └───── constants.ts                #Standardization of project values
+│       └───── constants.ts         #Standardization of project values
 |   └── 📁 services
 |   └── 📁 interfaces
 |   └── 📁 repositores
